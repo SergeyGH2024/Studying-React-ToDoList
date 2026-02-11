@@ -1,9 +1,9 @@
 // Внутри ребёнка я вытягиваю переданные от родителя пропсы и использую их в компоненте.
 // Компонент не должен изменять переданный пропс, он их только читает
+//
 
-const TodoItem = (props) => {
-
-	const {className, id, title, isDone} = props
+const TodoItem = props => {
+	const { className, id, title, isDone } = props
 
 	return (
 		<li className={`todo-item ${className}`}>
