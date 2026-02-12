@@ -1,9 +1,10 @@
 // Внутри ребёнка я вытягиваю переданные от родителя пропсы и использую их в компоненте.
 // Компонент не должен изменять переданный пропс, он их только читает
-// push from laptop
+
+// Component - это не дом, не элемент - это функция, возвращающая описание будущего ДОМ дерева, в теле которой уже могут быть дом-элементы.
 
 const TodoItem = props => {
-	const { className, id, title, isDone } = props
+	const { className, id, title, isDone, onDeleteTaskButtonClick, onTaskCompleteChange } = props
 
 	return (
 		<li className={`todo-item ${className}`}>
@@ -12,7 +13,7 @@ const TodoItem = props => {
 				id={id}
 				type='checkbox'
 				checked={isDone}
-				readOnly
+				onChange={({target}) => onTaskCompleteChange(id, target.checked)}
 			/>
 			<label className='todo-item__label' htmlFor={id}>
 				{title}
@@ -21,6 +22,7 @@ const TodoItem = props => {
 				className='todo-item__delete-button'
 				aria-label='Delete'
 				title='Delete'
+				onClick={() => onDeleteTaskButtonClick(id)}
 			>
 				<svg
 					width='20'

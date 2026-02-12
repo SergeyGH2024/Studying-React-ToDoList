@@ -1,6 +1,9 @@
 // Вместо дублирования почти одинакового кода - просто меняем нужные пропсы в компоненте  
 import Field from "./Field"
-const SearchTaskForm = () => {
+const SearchTaskForm = (props) => {
+	const {
+		onSearchInput
+	} = props
 	return (
 		<form className='todo__form'>
 			{/* <div className='todo__field field'>
@@ -21,6 +24,8 @@ const SearchTaskForm = () => {
 			label='Search task'
 			id='search-task'
 			type='search'
+			// onInput={(event) => onSearchInput(event.target.value)}
+			onInput={onSearchInput}
 			/>
 		</form>
 	)
