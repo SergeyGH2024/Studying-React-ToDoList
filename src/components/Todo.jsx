@@ -1,8 +1,8 @@
+import { useEffect, useState } from 'react'
 import AddTaskForm from './AddTaskForm'
 import SearchTaskForm from './SearchTaskForm'
 import TodoInfo from './TodoInfo'
 import TodoList from './TodoList'
-import { useState, useEffect } from 'react'
 
 // prop drilling - механика, при которой проп прокидывается н-р сверху через несколько компонентов вниз.
 
@@ -15,14 +15,29 @@ import { useState, useEffect } from 'react'
 
 // Хуки реакта можно вызывать только в теле компонента на 1 уровне или внутри собственных хуков. В других функциях, условиях и в разметке их использовать нельзя.
 
-const Todo = () => {
+//useEffect запускается как минимум один раз, порядок в коде важен
 
-	const [tasks, setTasks] = useState([
-		{ id: 'task-1', title: 'Купить молоко', isDone: false },
-		{ id: 'task-2', title: 'Погладить кота', isDone: true },
-	])
+const Todo = () => {
+	// const [tasks, setTasks] = useState([
+	// 	{ id: 'task-1', title: 'Купить молоко', isDone: false },
+	// 	{ id: 'task-2', title: 'Погладить кота', isDone: true },
+	// ])
+
+	const [tasks, setTasks] = useState(() => {
+		const savedTasks = localStorage.getItem('tasks')
+
+		if (savedTasks) {
+			return JSON.parse(savedTasks)
+		}
+
+		return [
+			{ id: 'task-1', title: 'Купить молоко', isDone: false },
+			{ id: 'task-2', title: 'Погладить кота', isDone: true },
+		]
+	})
 
 	const [newTaskTitle, setNewTaskTitle] = useState('')
+	const [searchQuery, setSearchQuery] = useState('')
 
 	const deleteAllTasks = () => {
 		const isConfirmed = confirm('Are you sure you want delete all?')
@@ -32,25 +47,19 @@ const Todo = () => {
 		}
 	}
 
-	const deleteTask = (taskId) => {
-		setTasks(
-			tasks.filter((task) => task.id !== taskId)
-		)
+	const deleteTask = taskId => {
+		setTasks(tasks.filter(task => task.id !== taskId))
 	}
 
 	const toggleTaskComplete = (taskId, isDone) => {
 		setTasks(
-			tasks.map((task) => {
+			tasks.map(task => {
 				if (task.id === taskId) {
-					return {...task, isDone}
+					return { ...task, isDone }
 				}
-			return task
-			})
+				return task
+			}),
 		)
-	}
-
-	const filterTasks = (query) => {
-		console.log(`Search ${query}`)
 	}
 
 	const addTask = () => {
@@ -61,39 +70,45 @@ const Todo = () => {
 				isDone: false,
 			}
 
-		setTasks([...tasks, newTask])
-		setNewTaskTitle('')
+			setTasks([...tasks, newTask])
+			setNewTaskTitle('')
 		}
 	}
 
 	useEffect(() => {
-		console.log('Save data in localStorage besause tasks is changed', tasks)
 		localStorage.setItem('tasks', JSON.stringify(tasks))
 	}, [tasks])
 
-	useEffect(() => {
-		console.log('Zagryjaem data v tasks iz LS')
-		const savedTasks = localStorage.getItem('tasks')
-	}, [])
+	const clearSearchQuery = searchQuery.trim().toLowerCase()
+	const filteredTasks =
+		clearSearchQuery.length > 0
+			? tasks.filter(({ title }) =>
+					title.toLowerCase().includes(clearSearchQuery),
+				)
+			: null
 
 	return (
 		<div className='todo'>
 			<h1 className='todo__title'>To Do List</h1>
-			<AddTaskForm addTask={addTask}
-			newTaskTitle={newTaskTitle}
-			setNewTaskTitle={setNewTaskTitle}
+			<AddTaskForm
+				addTask={addTask}
+				newTaskTitle={newTaskTitle}
+				setNewTaskTitle={setNewTaskTitle}
 			/>
-			<SearchTaskForm onSearchInput={filterTasks}/>
+			<SearchTaskForm
+				searchQuery={searchQuery}
+				setSearchQuery={setSearchQuery}
+			/>
 			<TodoInfo
 				total={tasks.length}
 				done={tasks.filter(({ isDone }) => isDone).length}
 				onDeleteAllButtonClick={deleteAllTasks}
 			/>
 			<TodoList
-			 tasks={tasks}
-			 onDeleteTaskButtonClick={deleteTask}
-			 onTaskCompleteChange={toggleTaskComplete}
-			 />
+				tasks={tasks}
+				onDeleteTaskButtonClick={deleteTask}
+				onTaskCompleteChange={toggleTaskComplete}
+			/>
 		</div>
 	)
 }
