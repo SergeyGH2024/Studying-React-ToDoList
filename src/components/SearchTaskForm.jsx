@@ -5,7 +5,7 @@ const SearchTaskForm = (props) => {
 		onSearchInput
 	} = props
 	return (
-		<form className='todo__form'>
+		<form className='todo__form' onSubmit={(event) => event.preventDefault()}>
 			{/* <div className='todo__field field'>
 				<label className='field__label' htmlFor='search-task'>
 					Search task
@@ -24,8 +24,7 @@ const SearchTaskForm = (props) => {
 			label='Search task'
 			id='search-task'
 			type='search'
-			// onInput={(event) => onSearchInput(event.target.value)}
-			onInput={onSearchInput}
+			onInput={(event) => onSearchInput(event.target.value)}
 			/>
 		</form>
 	)
