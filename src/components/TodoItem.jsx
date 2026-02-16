@@ -4,10 +4,12 @@
 // Component - это не дом, не элемент - это функция, возвращающая описание будущего ДОМ дерева, в теле которой уже могут быть дом-элементы.
 
 const TodoItem = props => {
-	const { className, id, title, isDone, onDeleteTaskButtonClick, onTaskCompleteChange } = props
+	console.log("TodoItem");
+	
+	const { className, id, title, isDone, onDeleteTaskButtonClick, onTaskCompleteChange, ref } = props
 
 	return (
-		<li className={`todo-item ${className}`}>
+		<li className={`todo-item ${className}`} ref={ref}>
 			<input
 				className='todo-item__checkbox'
 				id={id}
