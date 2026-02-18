@@ -1,5 +1,5 @@
-import { memo } from "react";
-
+import { memo, useContext, useMemo } from "react";
+import { TasksContext } from "../context/TasksContext";
 
 //В реакте обработчики указываются сразу в JSX-разметке. Нам не нужно искать элементы вручную по ДОМ-дереву.
 // Имена событий пишутся в camelCase - onClick, onInput, onSubmit
@@ -8,16 +8,24 @@ import { memo } from "react";
 
 
 
-const TodoInfo = (props) => {
-	console.log("TodoInfo");
+const TodoInfo = () => {
 	
-	const {
-		total,
-		done,
-		onDeleteAllButtonClick
-	} = props
+	// const {
+	// 	total,
+	// 	done,
+	// 	onDeleteAllButtonClick
+	// } = props
 
+	const {
+		tasks,
+		deleteAllTasks
+	} = useContext(TasksContext)
+
+	const total = tasks.length
 	const hasTasks = total > 0
+	const done = useMemo(() => {
+		return tasks.filter(({ isDone }) => isDone).length
+	}, [tasks])
 
 	return (
 		<div className='todo__info'>
@@ -27,7 +35,7 @@ const TodoInfo = (props) => {
 			{hasTasks && (
 				<button className='todo__delete-all-button'
 				 type='button'
-				 onClick={onDeleteAllButtonClick }	
+				 onClick={deleteAllTasks}	
 				 >
 				Delete all
 			</button>

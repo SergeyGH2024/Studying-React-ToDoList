@@ -1,7 +1,9 @@
 // Вместо дублирования почти одинакового кода - просто меняем нужные пропсы в компоненте
+import { useContext } from 'react'
 import Field from './Field'
-const SearchTaskForm = props => {
-	const { searchQuery, setSearchQuery } = props
+import { TasksContext } from '../context/TasksContext'
+const SearchTaskForm = () => {
+	const { searchQuery, setSearchQuery } = useContext(TasksContext)
 	return (
 		<form className='todo__form' onSubmit={event => event.preventDefault()}>
 			{/* <div className='todo__field field'>

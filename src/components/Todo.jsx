@@ -1,9 +1,10 @@
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useContext } from 'react'
 import AddTaskForm from './AddTaskForm'
 import SearchTaskForm from './SearchTaskForm'
 import TodoInfo from './TodoInfo'
 import TodoList from './TodoList'
 import Button from './Button'
+import { TasksContext } from '../context/TasksContext'
 
 // prop drilling - механика, при которой проп прокидывается н-р сверху через несколько компонентов вниз.
 
@@ -40,123 +41,55 @@ import Button from './Button'
 // Первый аргумент useCallback - это нужная нам функция, которую нужно запомнить - второй массив зависимостей.
 // хук useCallback полезен там, где нужно передавать обработчики в дочерние компоненты, обёрнутые в реакт memo.
 
+// Функция хук useCallback работает с функциями, но если у нас в компоненте есть данные такие как массивы или объекты (статичные) - нужно использовать хук useMemo - 
+// чтобы реакт не реагировал на смену их ССЫЛКИ в памяти. Напоминие - объекты - функции - массивы - сравниваются по ссылке в памяти.
+// Хуки useCallback and useMemo запоминают значение данных и не дают реакту реагировать на их изменение, тем самым не вызывать ререндр.
+
+// Пропсы - это ОК, но если их необходимо передавать через несколько уровней вложенности - то получается много лишних движений. И некоторые компоненты даже их не используют, 
+// а просто передают дальше. Помочь в этом нам может useContext API - он решает проблему prop drilling, предоставляя возможность передавать данные вглубь древа компонентов
+// без явной прокладки пропсов на каждом уровне.
+// Создаётся контекст с помощью функции createContext, потом древо компонентов оборачивается в компонент контекст Provider, который хранит данные. И затем любыe данные 
+//  переданные в Provider используются в любом внутреннем компоненте с помощью хука useContext. 
+
+// Хорошая практика выносить контекст в отдельный файл, так как его можно легко переиспользовать в других файлах.
+// Важно оборачивать в провайдер всё древо компонентов, где нам нужен доступ к данным (переменным, массивам, функциям).
 
 const Todo = () => {
-	console.log('Todo')
 	
-	const [tasks, setTasks] = useState( () => {
-	const savedTasks = localStorage.getItem('tasks')
-
-		if (savedTasks) {
-			return JSON.parse(savedTasks)
-		}
-
-	return [{ id: 'task-1', title: 'Купить молоко', isDone: false },
-			{ id: 'task-2', title: 'Погладить кота', isDone: true },]
-	}
-
-)
-
-	const [newTaskTitle, setNewTaskTitle] = useState('') 	
-	const [searchQuery, setSearchQuery] = useState('')
-
-	const newTaskInputRef = useRef(null) // Данная переменная будет содержать ДОМ элемент, которому в атрибут ref мы передаём её.
-	const firstIncompleteTaskRef = useRef(null)
-	const firstIncompleteTaskId = tasks.find(({isDone}) => !isDone)?.id
-
-	const deleteAllTasks = useCallback(() => {
-		const isConfirmed = confirm('Are you sure you want delete all?')
-
-		if (isConfirmed) {
-			setTasks([])
-		}
-	}, [])
-
-	const deleteTask = (taskId) => {
-		setTasks(
-			tasks.filter((task) => task.id !== taskId)
-		)
-	}
-
-	const toggleTaskComplete = (taskId, isDone) => {
-		setTasks(
-			tasks.map((task) => {
-				if (task.id === taskId) {
-					return {...task, isDone}
-				}
-			return task
-			})
-		)
-	}
-
-
-	const addTask = () => {
-
-		if (newTaskTitle.trim().length > 0) {
-			const newTask = {
-				id: crypto?.randomUUID() ?? Date.now().toString(),
-				title: newTaskTitle,
-				isDone: false,
-			}
-
-		setTasks([...tasks, newTask])
-		setNewTaskTitle('')
-		// newTaskInputRef.current.value = ''
-		setSearchQuery('')
-		newTaskInputRef.current.focus()
-
-		}
-
-		
-	}
-
-	useEffect(() => {
-		localStorage.setItem('tasks', JSON.stringify(tasks))
-	}, [tasks])
-
-	useEffect(() => {
-		newTaskInputRef.current.focus()
-	}, [])
-
-	// const renderCount = useRef(0)
-	// useEffect(() => {
-	// 	renderCount.current++
-	// })
-	// console.log(`компонент отрендерился ${renderCount.current} raz`)  
-
-	const clearSearchQuery = searchQuery.trim().toLowerCase()
-	const filteredTasks = clearSearchQuery.length > 0 
-	? tasks.filter(({title}) => title.toLowerCase().includes(clearSearchQuery))
-	: null
-	
+	const {firstIncompleteTaskRef} = useContext(TasksContext)
 
 	return (
-		<div className='todo'>
+		// <TasksContext.Provider value={{
+		// 	tasks, filteredTasks, firstIncompleteTaskId, firstIncompleteTaskRef, deleteAllTasks, deleteTask, toggleTaskComplete
+		// }}>
+			<div className='todo'>
 			<h1 className='todo__title'>To Do List</h1>
-			<AddTaskForm addTask={addTask}
-			newTaskTitle={newTaskTitle}
-			setNewTaskTitle={setNewTaskTitle}
-			newTaskInputRef={newTaskInputRef}
+			<AddTaskForm 
+			// addTask={addTask}
+			// newTaskTitle={newTaskTitle}
+			// setNewTaskTitle={setNewTaskTitle}
+			// newTaskInputRef={newTaskInputRef}
 			/>
 			<SearchTaskForm
-			 searchQuery={searchQuery}
-			 setSearchQuery={setSearchQuery}
+			//  searchQuery={searchQuery}
+			//  setSearchQuery={setSearchQuery}
 			 />
 			<TodoInfo
-				total={tasks.length}
-				done={tasks.filter(({ isDone }) => isDone).length}
-				onDeleteAllButtonClick={deleteAllTasks}
+				// total={tasks.length}
+				// done={doneTasks}
+				// onDeleteAllButtonClick={deleteAllTasks}
 			/>
 			<Button onClick={() => firstIncompleteTaskRef.current?.scrollIntoView({behavior: 'smooth'})}>Show first incomplete task</Button>
 			<TodoList
-			 tasks={tasks}
-			 filteredTasks={filteredTasks}
-			 firstIncompleteTaskRef={firstIncompleteTaskRef}
-			 firstIncompleteTaskId={firstIncompleteTaskId}
-			 onDeleteTaskButtonClick={deleteTask}
-			 onTaskCompleteChange={toggleTaskComplete}
+			//  tasks={tasks}
+			//  filteredTasks={filteredTasks}
+			//  firstIncompleteTaskRef={firstIncompleteTaskRef}
+			//  firstIncompleteTaskId={firstIncompleteTaskId}
+			//  onDeleteTaskButtonClick={deleteTask}
+			//  onTaskCompleteChange={toggleTaskComplete}
 			 />
 		</div>
+		// </TasksContext.Provider>
 	)
 }
 

@@ -1,21 +1,32 @@
+import { memo, useContext } from "react";
+import { TasksContext } from "../context/TasksContext";
+
 // Внутри ребёнка я вытягиваю переданные от родителя пропсы и использую их в компоненте.
 // Компонент не должен изменять переданный пропс, он их только читает
 
 // Component - это не дом, не элемент - это функция, возвращающая описание будущего ДОМ дерева, в теле которой уже могут быть дом-элементы.
 
 const TodoItem = props => {
-	console.log("TodoItem");
-	
-	const { className, id, title, isDone, onDeleteTaskButtonClick, onTaskCompleteChange, ref } = props
+	 
+	const { className, id, title, isDone,
+		//  onDeleteTaskButtonClick, onTaskCompleteChange, ref
+		 } = props
+
+	const {
+				firstIncompleteTaskRef,
+				firstIncompleteTaskId,
+				deleteTask,
+				toggleTaskComplete,
+			} = useContext(TasksContext)
 
 	return (
-		<li className={`todo-item ${className}`} ref={ref}>
+		<li className={`todo-item ${className}`} ref={id === firstIncompleteTaskId ? firstIncompleteTaskRef : null}>
 			<input
 				className='todo-item__checkbox'
 				id={id}
 				type='checkbox'
 				checked={isDone}
-				onChange={({target}) => onTaskCompleteChange(id, target.checked)}
+				onChange={({target}) => toggleTaskComplete(id, target.checked)}
 			/>
 			<label className='todo-item__label' htmlFor={id}>
 				{title}
@@ -24,7 +35,7 @@ const TodoItem = props => {
 				className='todo-item__delete-button'
 				aria-label='Delete'
 				title='Delete'
-				onClick={() => onDeleteTaskButtonClick(id)}
+				onClick={() => deleteTask(id)}
 			>
 				<svg
 					width='20'
@@ -46,4 +57,4 @@ const TodoItem = props => {
 	)
 }
 
-export default TodoItem
+export default memo(TodoItem)

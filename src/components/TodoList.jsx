@@ -1,4 +1,6 @@
 import TodoItem from './TodoItem'
+import { memo, useContext } from 'react'
+import { TasksContext } from '../context/TasksContext'
 
 // Пропсы (properties) я передаю в месте уже добавления компонента на страницу, а не в момент его создания.
 //  Так же как при вызове функции аргументы. 
@@ -8,8 +10,13 @@ import TodoItem from './TodoItem'
 // Вместо дублирования тодо-элементов с разными пропсами, мы будем сами эти элементы(в виде объекта) принимать пропсом и обрабатывать методом массивов
 
 
-const TodoList = (props) => {
-	const { tasks = [], filteredTasks, onDeleteTaskButtonClick, onTaskCompleteChange, firstIncompleteTaskRef, firstIncompleteTaskId } = props
+const TodoList = () => {
+	// const { tasks = [], filteredTasks, onDeleteTaskButtonClick, onTaskCompleteChange, firstIncompleteTaskRef, firstIncompleteTaskId } = props
+
+	const {
+			tasks,
+			filteredTasks
+		} = useContext(TasksContext)
 
 	const hasTasks = tasks.length > 0
 	const isEmptyFilteredTasks = filteredTasks?.length === 0
@@ -44,9 +51,6 @@ const TodoList = (props) => {
 				<TodoItem
 				className='todo__item'
 				key={task.id}
-				ref={task.id === firstIncompleteTaskId ? firstIncompleteTaskRef : null}
-				onDeleteTaskButtonClick={onDeleteTaskButtonClick}
-				onTaskCompleteChange={onTaskCompleteChange}
 				{...task}
 				/>
 			))}
@@ -55,4 +59,10 @@ const TodoList = (props) => {
 	)
 }
 
-export default TodoList
+export default memo(TodoList)
+
+				// ref={task.id === firstIncompleteTaskId ? firstIncompleteTaskRef : null}
+				// onDeleteTaskButtonClick={onDeleteTaskButtonClick}
+				// onTaskCompleteChange={onTaskCompleteChange}
+				
+			
