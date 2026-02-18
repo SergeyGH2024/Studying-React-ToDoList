@@ -1,7 +1,8 @@
 // Вместо дублирования почти одинакового кода - просто меняем нужные пропсы в компоненте
 import { useContext } from 'react'
-import Field from './Field'
 import { TasksContext } from '../context/TasksContext'
+import Field from './Field'
+
 const SearchTaskForm = () => {
 	const { searchQuery, setSearchQuery } = useContext(TasksContext)
 	return (
@@ -25,7 +26,9 @@ const SearchTaskForm = () => {
 				id='search-task'
 				type='search'
 				value={searchQuery}
-				onInput={event => setSearchQuery(event.target.value)}
+				onInput={event => {
+					;(setSearchQuery(event.target.value), console.log(1))
+				}}
 			/>
 		</form>
 	)
