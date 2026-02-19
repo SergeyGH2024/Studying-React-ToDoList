@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import useTasksLocalStorage from './useTasksLocalStorage'
+// import useTasksLocalStorage from './useTasksLocalStorage'
 
 const useTasks = () => {
-	const { savedTasks, saveTasks } = useTasksLocalStorage()
+	// const { savedTasks, saveTasks } = useTasksLocalStorage()
 
-	const [tasks, setTasks] = useState(
-		savedTasks ?? [
-			{ id: 'task-1', title: 'Купить молоко', isDone: false },
-			{ id: 'task-2', title: 'Погладить кота', isDone: true },
-		],
-	)
+	// const [tasks, setTasks] = useState(
+	// 	savedTasks ?? [
+	// 		{ id: 'task-1', title: 'Купить молоко', isDone: false },
+	// 		{ id: 'task-2', title: 'Погладить кота', isDone: true },
+	// 	],
+	// )
+
+	const [tasks, setTasks] = useState([])
 
 	const [newTaskTitle, setNewTaskTitle] = useState('')
 	const [searchQuery, setSearchQuery] = useState('')
@@ -39,13 +41,24 @@ const useTasks = () => {
 		)
 	}
 
-	const addTask = useCallback(() => {
-		if (newTaskTitle.trim().length > 0) {
+	const addTask = useCallback((title) => {
+		// if (newTaskTitle.trim().length > 0) {
 			const newTask = {
-				id: crypto?.randomUUID() ?? Date.now().toString(),
-				title: newTaskTitle,
+				// id: crypto?.randomUUID() ?? Date.now().toString(),
+				// title: newTaskTitle,
+				title,
 				isDone: false,
 			}
+
+			fetch("http://localhost:3001/tasks", {
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(newTask)
+			})
+			.then((response) => response.json())
+
 
 			setTasks(prevTasks => [...prevTasks, newTask])
 			// setTasks([...tasks, newTask])
@@ -53,15 +66,19 @@ const useTasks = () => {
 			// newTaskInputRef.current.value = ''
 			setSearchQuery('')
 			newTaskInputRef.current.focus()
-		}
-	}, [newTaskTitle])
+		// }
+	}, [])
 
-	useEffect(() => {
-		saveTasks(tasks)
-	}, [tasks])
+	// useEffect(() => {
+	// 	saveTasks(tasks)
+	// }, [tasks])
 
 	useEffect(() => {
 		newTaskInputRef.current.focus()
+
+		fetch("http://localhost:3001/tasks")
+		.then((response) => response.json())
+		.then(setTasks)
 	}, [])
 
 	// const renderCount = useRef(0)
