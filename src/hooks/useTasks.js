@@ -41,31 +41,32 @@ const useTasks = () => {
 		)
 	}
 
-	const addTask = useCallback((title) => {
+	const addTask = useCallback(title => {
 		// if (newTaskTitle.trim().length > 0) {
-			const newTask = {
-				// id: crypto?.randomUUID() ?? Date.now().toString(),
-				// title: newTaskTitle,
-				title,
-				isDone: false,
-			}
+		const newTask = {
+			// id: crypto?.randomUUID() ?? Date.now().toString(),
+			// title: newTaskTitle,
+			title,
+			isDone: false,
+		}
 
-			fetch("http://localhost:3001/tasks", {
-				method: "POST",
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(newTask)
+		fetch('http://localhost:3001/tasks', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(newTask),
+		})
+			.then(response => response.json())
+			.then(addedTask => {
+				setTasks(prevTasks => [...prevTasks, addedTask])
+				// setTasks([...tasks, newTask])
+				setNewTaskTitle('')
+				// newTaskInputRef.current.value = ''
+				setSearchQuery('')
+				newTaskInputRef.current.focus()
 			})
-			.then((response) => response.json())
 
-
-			setTasks(prevTasks => [...prevTasks, newTask])
-			// setTasks([...tasks, newTask])
-			setNewTaskTitle('')
-			// newTaskInputRef.current.value = ''
-			setSearchQuery('')
-			newTaskInputRef.current.focus()
 		// }
 	}, [])
 
@@ -76,9 +77,9 @@ const useTasks = () => {
 	useEffect(() => {
 		newTaskInputRef.current.focus()
 
-		fetch("http://localhost:3001/tasks")
-		.then((response) => response.json())
-		.then(setTasks)
+		fetch('http://localhost:3001/tasks')
+			.then(response => response.json())
+			.then(setTasks)
 	}, [])
 
 	// const renderCount = useRef(0)
