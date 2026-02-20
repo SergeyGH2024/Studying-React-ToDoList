@@ -9,9 +9,25 @@ export const useRoute = () => {
 		const onLocationChange = () => {
 			setPath(window.location.pathname)
 		}
+
+		// Эффект срабатывает 1 раз (из-за пустого массива зависимостей) после рендера компонента. В useEffect есть особое поведение (функция очистки) - если указать возврат какой-то функции из хука - то реакт запоминает её - и вызовет её только в случае, если компонент удалится.
+
+		window.addEventListener('popstate', onLocationChange)
+
+		return () => {
+			window.removeEventListener('popstate', onLocationChange)
+		}
 	}, [])
+
+	return path
 }
 
-const Router = () => {}
+const Router = props => {
+	const { routes } = props // объект с путями (пути к компонентам страниц)
+	const path = useRoute()
+	const Page = routes[path] ?? routes['*']
+
+	return <Page />
+}
 
 export default Router
