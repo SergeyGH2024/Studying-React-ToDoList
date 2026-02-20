@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import tasksAPI from '../api/tasksAPI'
 // import useTasksLocalStorage from './useTasksLocalStorage'
 
 const useTasks = () => {
@@ -22,16 +23,42 @@ const useTasks = () => {
 		const isConfirmed = confirm('Are you sure you want delete all?')
 
 		if (isConfirmed) {
-			setTasks([])
+		// 	Promise.all(
+		// 		tasks.map(({id}) => {
+		// 			return fetch(`http://localhost:3001/tasks/${id}`, {
+		// 	method: "DELETE",
+		// })
+
+		// 		})
+		// 	)
+			tasksAPI.deleteAll(tasks)
+			.then(() => setTasks([]))
 		}
-	}, [])
+	}, [tasks])
 
-	const deleteTask = taskId => {
-		setTasks(tasks.filter(task => task.id !== taskId))
-	}
+	const deleteTask = useCallback(taskId => {
 
-	const toggleTaskComplete = (taskId, isDone) => {
-		setTasks(
+		// fetch(`http://localhost:3001/tasks/${taskId}`, {
+		// 	method: "DELETE",
+		// })
+		tasksAPI.delete(taskId)
+		.then(() => {
+			setTasks(tasks.filter(task => task.id !== taskId))
+		})
+
+	}, [tasks])
+
+	const toggleTaskComplete = useCallback((taskId, isDone) => {
+		// fetch(`http://localhost:3001/tasks/${taskId}`, {
+		// 	method: "PATCH",
+		// 	headers: {
+		// 		'Content-Type': 'application/json',
+		// 	},
+		// 	body: JSON.stringify({isDone})
+		// })
+		tasksAPI.toggleComplete(taskId, isDone)
+		.then(() => {
+			setTasks(
 			tasks.map(task => {
 				if (task.id === taskId) {
 					return { ...task, isDone }
@@ -39,7 +66,9 @@ const useTasks = () => {
 				return task
 			}),
 		)
-	}
+		})
+
+	}, [tasks])
 
 	const addTask = useCallback(title => {
 		// if (newTaskTitle.trim().length > 0) {
@@ -50,14 +79,15 @@ const useTasks = () => {
 			isDone: false,
 		}
 
-		fetch('http://localhost:3001/tasks', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(newTask),
-		})
-			.then(response => response.json())
+		// fetch('http://localhost:3001/tasks', {
+		// 	method: 'POST',
+		// 	headers: {
+		// 		'Content-Type': 'application/json',
+		// 	},
+		// 	body: JSON.stringify(newTask),
+		// })
+		// 	.then(response => response.json())
+			tasksAPI.add(newTask)
 			.then(addedTask => {
 				setTasks(prevTasks => [...prevTasks, addedTask])
 				// setTasks([...tasks, newTask])
@@ -77,9 +107,9 @@ const useTasks = () => {
 	useEffect(() => {
 		newTaskInputRef.current.focus()
 
-		fetch('http://localhost:3001/tasks')
-			.then(response => response.json())
-			.then(setTasks)
+		// fetch('http://localhost:3001/tasks')
+			// .then(response => response.json())
+			tasksAPI.getAll().then(setTasks)
 	}, [])
 
 	// const renderCount = useRef(0)
