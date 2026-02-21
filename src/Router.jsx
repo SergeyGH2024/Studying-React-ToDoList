@@ -24,8 +24,8 @@ export const useRoute = () => {
 
 const Router = props => {
 	const { routes } = props // объект с путями (пути к компонентам страниц)
-	const path = useRoute()
-	const Page = routes[path] ?? routes['*']
+	const path = useRoute() // Возвращает текущий адрес путь
+	const Page = routes[path] ?? routes['*'] // Страница соответствующая адресу с пути или страница с ошибкой
 
 	return <Page />
 }
