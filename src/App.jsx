@@ -58,7 +58,8 @@ import TasksPage from './pages/TasksPage'
 const App = () => {
 	const routes = {
 		'/': TasksPage,
-		'/tasks/123': TaskPage,
+		// '/tasks/123': TaskPage, Вместо статичного пути теперь указываем шаблон
+		'/tasks/:id': TaskPage,
 		'*': () => <div>404 page not found</div>,
 	}
 

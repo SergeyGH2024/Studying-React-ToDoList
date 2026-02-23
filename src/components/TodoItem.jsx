@@ -1,5 +1,6 @@
-import { memo, useContext } from "react";
-import { TasksContext } from "../context/TasksContext";
+import { memo, useContext } from 'react'
+import { TasksContext } from '../context/TasksContext'
+import RouterLink from './RouterLink'
 
 // Внутри ребёнка я вытягиваю переданные от родителя пропсы и использую их в компоненте.
 // Компонент не должен изменять переданный пропс, он их только читает
@@ -7,30 +8,39 @@ import { TasksContext } from "../context/TasksContext";
 // Component - это не дом, не элемент - это функция, возвращающая описание будущего ДОМ дерева, в теле которой уже могут быть дом-элементы.
 
 const TodoItem = props => {
-	 
-	const { className, id, title, isDone,
+	const {
+		className,
+		id,
+		title,
+		isDone,
 		//  onDeleteTaskButtonClick, onTaskCompleteChange, ref
-		 } = props
+	} = props
 
 	const {
-				firstIncompleteTaskRef,
-				firstIncompleteTaskId,
-				deleteTask,
-				toggleTaskComplete,
-			} = useContext(TasksContext)
+		firstIncompleteTaskRef,
+		firstIncompleteTaskId,
+		deleteTask,
+		toggleTaskComplete,
+	} = useContext(TasksContext)
 
 	return (
-		<li className={`todo-item ${className}`} ref={id === firstIncompleteTaskId ? firstIncompleteTaskRef : null}>
+		<li
+			className={`todo-item ${className}`}
+			ref={id === firstIncompleteTaskId ? firstIncompleteTaskRef : null}
+		>
 			<input
 				className='todo-item__checkbox'
 				id={id}
 				type='checkbox'
 				checked={isDone}
-				onChange={({target}) => toggleTaskComplete(id, target.checked)}
+				onChange={({ target }) => toggleTaskComplete(id, target.checked)}
 			/>
-			<label className='todo-item__label' htmlFor={id}>
+			<label className='todo-item__label visually-hidden' htmlFor={id}>
 				{title}
 			</label>
+			<RouterLink to={`/tasks/${id}`} aria-label='Task detail page'>
+				{title}
+			</RouterLink>
 			<button
 				className='todo-item__delete-button'
 				aria-label='Delete'

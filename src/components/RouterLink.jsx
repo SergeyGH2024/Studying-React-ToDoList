@@ -1,0 +1,24 @@
+// В реакт нужно перехватывать клик по ссылке, отменять стандарт. поведение браузера и затем вручную производить какие-то действия, так как при клике страница перезагружается полностью, а потом отрисовывается компонент.
+// Этот компонент будет имитировать обычную ссылку, но по правилам реакта.
+
+const RouterLink = props => {
+	const {
+		to, // То, что указано в href
+		children,
+		...rest
+	} = props
+
+	const handleClick = event => {
+		event.preventDefault()
+		window.history.pushState({}, '', to) // Изменяет url адрес страницы браузера без перезагрузки, добавляет историю.
+		window.dispatchEvent(new PopStateEvent('popstate')) // Вручную генерируем событие попстей, чтобы наш роутер узнал что путь изменился и обновил своё состояние
+	}
+
+	return (
+		<a href={to} onClick={handleClick} {...rest}>
+			{children}
+		</a>
+	)
+}
+
+export default RouterLink
