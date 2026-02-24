@@ -1,6 +1,6 @@
 import { memo, useContext } from 'react'
-import { TasksContext } from '../context/TasksContext'
-import RouterLink from './RouterLink'
+import { TasksContext } from '../../context/TasksContext'
+import RouterLink from '../RouterLink/RouterLink'
 
 // Внутри ребёнка я вытягиваю переданные от родителя пропсы и использую их в компоненте.
 // Компонент не должен изменять переданный пропс, он их только читает

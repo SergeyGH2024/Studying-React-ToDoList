@@ -1,10 +1,10 @@
 import { useContext } from 'react'
-import AddTaskForm from './AddTaskForm'
-import SearchTaskForm from './SearchTaskForm'
-import TodoInfo from './TodoInfo'
-import TodoList from './TodoList'
-import Button from './Button'
-import { TasksContext } from '../context/TasksContext'
+import { TasksContext } from '../../context/TasksContext'
+import AddTaskForm from '../AddTaskForm/AddTaskForm'
+import Button from '../Button/Button'
+import SearchTaskForm from '../SearchTaskForm/SearchTaskForm'
+import TodoInfo from '../TodoInfo/TodoInfo'
+import TodoList from '../TodoList/TodoList'
 
 // prop drilling - механика, при которой проп прокидывается н-р сверху через несколько компонентов вниз.
 
@@ -26,45 +26,44 @@ import { TasksContext } from '../context/TasksContext'
 
 // Ещё useRef используется для хранения произвольных данных, которые не нужно отрисовывать - н-р - ИД таймера, какой-то сччетчик.
 
-// При ререндере реакт прогружает компонент - потом сравнивает что именно изменилось и обновляет именно эти части компонента, а не весь. 
-// Реакт не трогает ДОМ элементы без необходимости - он обновляет только то, что реально изменилось. ПРОБЛЕМА в том, что при ререндере заново 
-// выполняется весь код компонента - создаются объекты там и т.д. И это влияет на производительность. При любом изменнении состояния реакт 
+// При ререндере реакт прогружает компонент - потом сравнивает что именно изменилось и обновляет именно эти части компонента, а не весь.
+// Реакт не трогает ДОМ элементы без необходимости - он обновляет только то, что реально изменилось. ПРОБЛЕМА в том, что при ререндере заново
+// выполняется весь код компонента - создаются объекты там и т.д. И это влияет на производительность. При любом изменнении состояния реакт
 // вызывает ререндр компонента, а вместе с ним и всех дочерних элементов, даже если их данные не изменились.
 // Во избежание таких ненужных ререндеров существуют оптимизационные инструменты - ReactMEMO - чтобы компонент не ререндерился без необходимости,
 // useMEMO - чтобы кешировать сложные вычисления и useCallback - чтобы стабилизировать функции.
 // В реакт в.19 есть уже встроенные инструменты оптимизации.
 
 // Мы можем передать компонент в функцию memo(component) - тем самым запретив перерисовку этого компонента ЕСЛИ ИМЕННО его пропсы не меняются.
-// НО, пропы могут содержать функции, которые объявлены в теле изменяемого компонента и при его перерисовке memo подумает, что проп изменился - 
+// НО, пропы могут содержать функции, которые объявлены в теле изменяемого компонента и при его перерисовке memo подумает, что проп изменился -
 // так как функция создалась заново (а функции сравниваются по ссылке, как объекты) и это вызовет ререндр компонента.
 // Чтобы это исправить в реакт есть хук useCallback - позволяющий запомнить функцию между рендерами, чтобы она не пересоздавалась каждый раз.
 // Первый аргумент useCallback - это нужная нам функция, которую нужно запомнить - второй массив зависимостей.
 // хук useCallback полезен там, где нужно передавать обработчики в дочерние компоненты, обёрнутые в реакт memo.
 
-// Функция хук useCallback работает с функциями, но если у нас в компоненте есть данные такие как массивы или объекты (статичные) - нужно использовать хук useMemo - 
+// Функция хук useCallback работает с функциями, но если у нас в компоненте есть данные такие как массивы или объекты (статичные) - нужно использовать хук useMemo -
 // чтобы реакт не реагировал на смену их ССЫЛКИ в памяти. Напоминие - объекты - функции - массивы - сравниваются по ссылке в памяти.
 // Хуки useCallback and useMemo запоминают значение данных и не дают реакту реагировать на их изменение, тем самым не вызывать ререндр.
 
-// Пропсы - это ОК, но если их необходимо передавать через несколько уровней вложенности - то получается много лишних движений. И некоторые компоненты даже их не используют, 
+// Пропсы - это ОК, но если их необходимо передавать через несколько уровней вложенности - то получается много лишних движений. И некоторые компоненты даже их не используют,
 // а просто передают дальше. Помочь в этом нам может useContext API - он решает проблему prop drilling, предоставляя возможность передавать данные вглубь древа компонентов
 // без явной прокладки пропсов на каждом уровне.
-// Создаётся контекст с помощью функции createContext, потом древо компонентов оборачивается в компонент контекст Provider, который хранит данные. И затем любыe данные 
-//  переданные в Provider используются в любом внутреннем компоненте с помощью хука useContext. 
+// Создаётся контекст с помощью функции createContext, потом древо компонентов оборачивается в компонент контекст Provider, который хранит данные. И затем любыe данные
+//  переданные в Provider используются в любом внутреннем компоненте с помощью хука useContext.
 
 // Хорошая практика выносить контекст в отдельный файл, так как его можно легко переиспользовать в других файлах.
 // Важно оборачивать в провайдер всё древо компонентов, где нам нужен доступ к данным (переменным, массивам, функциям).
 
 const Todo = () => {
-	
-	const {firstIncompleteTaskRef} = useContext(TasksContext)
+	const { firstIncompleteTaskRef } = useContext(TasksContext)
 
 	return (
 		// <TasksContext.Provider value={{
 		// 	tasks, filteredTasks, firstIncompleteTaskId, firstIncompleteTaskRef, deleteAllTasks, deleteTask, toggleTaskComplete
 		// }}>
-			<div className='todo'>
+		<div className='todo'>
 			<h1 className='todo__title'>To Do List</h1>
-			<AddTaskForm 
+			<AddTaskForm
 			// addTask={addTask}
 			// newTaskTitle={newTaskTitle}
 			// setNewTaskTitle={setNewTaskTitle}
@@ -73,13 +72,19 @@ const Todo = () => {
 			<SearchTaskForm
 			//  searchQuery={searchQuery}
 			//  setSearchQuery={setSearchQuery}
-			 />
-			<TodoInfo
-				// total={tasks.length}
-				// done={doneTasks}
-				// onDeleteAllButtonClick={deleteAllTasks}
 			/>
-			<Button onClick={() => firstIncompleteTaskRef.current?.scrollIntoView({behavior: 'smooth'})}>Show first incomplete task</Button>
+			<TodoInfo
+			// total={tasks.length}
+			// done={doneTasks}
+			// onDeleteAllButtonClick={deleteAllTasks}
+			/>
+			<Button
+				onClick={() =>
+					firstIncompleteTaskRef.current?.scrollIntoView({ behavior: 'smooth' })
+				}
+			>
+				Show first incomplete task
+			</Button>
 			<TodoList
 			//  tasks={tasks}
 			//  filteredTasks={filteredTasks}
@@ -87,7 +92,7 @@ const Todo = () => {
 			//  firstIncompleteTaskId={firstIncompleteTaskId}
 			//  onDeleteTaskButtonClick={deleteTask}
 			//  onTaskCompleteChange={toggleTaskComplete}
-			 />
+			/>
 		</div>
 		// </TasksContext.Provider>
 	)

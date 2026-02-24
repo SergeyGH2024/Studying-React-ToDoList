@@ -1,7 +1,7 @@
 // Вместо дублирования почти одинакового кода - просто меняем нужные пропсы в компоненте
 import { useContext } from 'react'
-import { TasksContext } from '../context/TasksContext'
-import Field from './Field'
+import { TasksContext } from '../../context/TasksContext'
+import Field from '../Field/Field'
 
 const SearchTaskForm = () => {
 	const { searchQuery, setSearchQuery } = useContext(TasksContext)

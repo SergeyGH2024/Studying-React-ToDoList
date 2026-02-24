@@ -1,25 +1,19 @@
-import { memo, useContext, useMemo } from "react";
-import { TasksContext } from "../context/TasksContext";
+import { memo, useContext, useMemo } from 'react'
+import { TasksContext } from '../../context/TasksContext'
 
 //В реакте обработчики указываются сразу в JSX-разметке. Нам не нужно искать элементы вручную по ДОМ-дереву.
 // Имена событий пишутся в camelCase - onClick, onInput, onSubmit
 // В значении пропа мы передаём функцию () => {}, а не строку. Или ссылку на функцию, НО не вызываем её {func}.
 // Объект event в реакте не такой как в js. В реакт это SyntheticBaseEvent - это тот же объект event, но обернутый в дополнительный функционал.
 
-
-
 const TodoInfo = () => {
-	
 	// const {
 	// 	total,
 	// 	done,
 	// 	onDeleteAllButtonClick
 	// } = props
 
-	const {
-		tasks,
-		deleteAllTasks
-	} = useContext(TasksContext)
+	const { tasks, deleteAllTasks } = useContext(TasksContext)
 
 	const total = tasks.length
 	const hasTasks = total > 0
@@ -33,13 +27,14 @@ const TodoInfo = () => {
 				Done {done} from {total}
 			</div>
 			{hasTasks && (
-				<button className='todo__delete-all-button'
-				 type='button'
-				 onClick={deleteAllTasks}	
-				 >
-				Delete all
-			</button>
-		)}
+				<button
+					className='todo__delete-all-button'
+					type='button'
+					onClick={deleteAllTasks}
+				>
+					Delete all
+				</button>
+			)}
 		</div>
 	)
 }

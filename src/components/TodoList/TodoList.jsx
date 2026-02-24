@@ -1,6 +1,6 @@
 import { memo, useContext } from 'react'
-import { TasksContext } from '../context/TasksContext'
-import TodoItem from './TodoItem'
+import { TasksContext } from '../../context/TasksContext'
+import TodoItem from '../TodoItem/TodoItem'
 
 // Пропсы (properties) я передаю в месте уже добавления компонента на страницу, а не в момент его создания.
 //  Так же как при вызове функции аргументы.

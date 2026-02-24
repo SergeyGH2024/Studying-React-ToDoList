@@ -1,30 +1,26 @@
 import { useContext, useState } from 'react'
-import Button from './Button'
-import Field from './Field'
-import { TasksContext } from '../context/TasksContext'
+import { TasksContext } from '../../context/TasksContext'
+import Button from '../Button/Button'
+import Field from '../Field/Field'
 
 const AddTaskForm = () => {
-	const { addTask,
-		newTaskTitle,
-		setNewTaskTitle,
-		newTaskInputRef
-	 } = useContext(TasksContext)
+	const { addTask, newTaskTitle, setNewTaskTitle, newTaskInputRef } =
+		useContext(TasksContext)
 
-	 const [error, setError] = useState('')
+	const [error, setError] = useState('')
 
-	 const clearNewTaskTitle = newTaskTitle.trim()
-	 const isNewTaskTitleEmpty = clearNewTaskTitle.length === 0
+	const clearNewTaskTitle = newTaskTitle.trim()
+	const isNewTaskTitleEmpty = clearNewTaskTitle.length === 0
 
-	const onSubmit = (event) => {
+	const onSubmit = event => {
 		event.preventDefault()
 		if (!isNewTaskTitleEmpty) {
-		addTask(clearNewTaskTitle)
-
+			addTask(clearNewTaskTitle)
 		}
 	}
 
-	const onInput = (event) => {
-		const {value} = event.target
+	const onInput = event => {
+		const { value } = event.target
 		const clearValue = value.trim()
 		const hasOnlySpaces = value.length > 0 && clearValue.length === 0
 
@@ -38,18 +34,17 @@ const AddTaskForm = () => {
 	return (
 		<form className='todo__form' onSubmit={onSubmit}>
 			<Field
-			className='todo__field'
-			label='New task title'
-			id='new-task'
-			error={error}
-			value={newTaskTitle}
-			onInput={onInput}
-			ref={newTaskInputRef}
+				className='todo__field'
+				label='New task title'
+				id='new-task'
+				error={error}
+				value={newTaskTitle}
+				onInput={onInput}
+				ref={newTaskInputRef}
 			/>
-			<Button
-			 type='submit'
-			 isDisabled={isNewTaskTitleEmpty}
-			 >Add</Button>
+			<Button type='submit' isDisabled={isNewTaskTitleEmpty}>
+				Add
+			</Button>
 		</form>
 	)
 }

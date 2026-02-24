@@ -51,6 +51,9 @@
 // import Todo from './components/Todo'
 // import { TasksProvider } from './context/TasksContext'
 
+// Cтили в реакт лучше подключать стили в каждом компоненте, чтобы они загружались только когда компонент используется, а не выносить в отдельные (общие) файлы стилей, так как таким образом неиспользующиеся компоненты будут засорять общий файл стилей своими стилями.
+// Можно подключать в проект не только обычные css файлы, но и scss. Для этого стоить просто поменять расширение и запустить sass - npm i -D sass
+
 import Router from './Router'
 import TaskPage from './pages/TaskPage'
 import TasksPage from './pages/TasksPage'

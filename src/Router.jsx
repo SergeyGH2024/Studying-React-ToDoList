@@ -15,9 +15,9 @@ const matchPath = (path, route) => {
 
 	for (let i = 0; i < routePaths.length; i++) {
 		if (routePaths[i].startsWith(':')) {
-			const paramName = routePaths[i].slice(1)
+			const paramName = routePaths[i].slice(1) // Сюда попадает id
 
-			params[paramName] = pathParts[i]
+			params[paramName] = pathParts[i] // Кладем в объект часть пути c path
 		} else if (routePaths[i] !== pathParts[i]) {
 			return null
 		}
@@ -27,6 +27,7 @@ const matchPath = (path, route) => {
 }
 
 export const useRoute = () => {
+	// Возвращает актуальный в данный момент путь
 	const [path, setPath] = useState(window.location.pathname) // Храним в состоянии текущий путь
 
 	useEffect(() => {
@@ -50,16 +51,30 @@ const Router = props => {
 	const { routes } = props // объект с путями (пути к компонентам страниц)
 	const path = useRoute() // Возвращает текущий адрес путь
 
-	if (path.startsWith('/tasks/')) {
-		const id = path.replace('/tasks/', '') // Получаем чистый ид
-		const TaskPage = routes['/tasks/:id']
+	for (const route in routes) {
+		const params = matchPath(path, route)
 
-		return <TaskPage params={{ id }} />
+		if (params) {
+			const Page = routes[route]
+
+			return <Page params={params} />
+		}
 	}
 
-	const Page = routes[path] ?? routes['*'] // Страница соответствующая адресу с пути или страница с ошибкой
+	const NotFound = routes['*']
 
-	return <Page />
+	return <NotFound />
+
+	// if (path.startsWith('/tasks/')) {
+	// 	const id = path.replace('/tasks/', '') // Получаем чистый ид
+	// 	const TaskPage = routes['/tasks/:id']
+
+	// 	return <TaskPage params={{ id }} />
+	// }
+
+	// const Page = routes[path] ?? routes['*'] // Страница соответствующая адресу с пути или страница с ошибкой
+
+	// return <Page />
 }
 
 export default Router

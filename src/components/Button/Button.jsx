@@ -1,18 +1,23 @@
+import styles from './Button.module.scss'
+
 // children - это специальный проп, который содержит в себе данные находящиеся между открывающим и закрывающим тегами компонента
 
-const Button = (props) => {
+const Button = props => {
 	const {
-		className='',
-		type='button',
+		className = '',
+		type = 'button',
 		children,
 		isDisabled,
-		onClick
+		onClick,
 	} = props
 	return (
-		<button className={`button ${className}`} type={type}
-		 onClick={onClick}
-		 disabled={isDisabled}
-		 >
+		<button
+			// className={`button ${className}`}
+			className={`${styles.button} ${className}`}
+			type={type}
+			onClick={onClick}
+			disabled={isDisabled}
+		>
 			{children}
 		</button>
 	)

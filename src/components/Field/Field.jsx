@@ -1,3 +1,4 @@
+import styles from './Field.module.scss'
 // Так же мы можем задавать значения пропсов по-умолчанию, как и в параментарах функции
 
 // В реакт компоненте есть разные моменты жизненного цикла - компонент появился - изменился - удалился
@@ -15,7 +16,7 @@
 // При перезагрузке страницы изменённые данные в useState не сохраняются, так как они живут в памяти браузера.
 // Чтобы сохранить данные между сессиями - можно использовать localStorage.
 
-const Field = (props) => {
+const Field = props => {
 	const {
 		className = '',
 		id,
@@ -24,15 +25,15 @@ const Field = (props) => {
 		value,
 		error,
 		onInput,
-		ref
+		ref,
 	} = props
 	return (
-		<div className={`field ${className}`}>
-			<label className='field__label' htmlFor={id}>
+		<div className={`${styles.field} ${className}`}>
+			<label className={styles.label} htmlFor={id}>
 				{label}
 			</label>
 			<input
-				className={`field__input ${error ? 'is-invalid' : ''}`}
+				className={`${styles.input} ${error ? styles.isInvalid : ''}`}
 				id='new-task'
 				placeholder=' '
 				autoComplete='off'
@@ -41,7 +42,11 @@ const Field = (props) => {
 				onInput={onInput}
 				ref={ref}
 			/>
-			{error && (<span className="field__error" title={error}>{error}</span>)}
+			{error && (
+				<span className={styles.error} title={error}>
+					{error}
+				</span>
+			)}
 		</div>
 	)
 }
