@@ -5,6 +5,7 @@ import Button from '../Button/Button'
 import SearchTaskForm from '../SearchTaskForm/SearchTaskForm'
 import TodoInfo from '../TodoInfo/TodoInfo'
 import TodoList from '../TodoList/TodoList'
+import styles from './Todo.module.scss'
 
 // prop drilling - механика, при которой проп прокидывается н-р сверху через несколько компонентов вниз.
 
@@ -61,7 +62,7 @@ const Todo = () => {
 		// <TasksContext.Provider value={{
 		// 	tasks, filteredTasks, firstIncompleteTaskId, firstIncompleteTaskRef, deleteAllTasks, deleteTask, toggleTaskComplete
 		// }}>
-		<div className='todo'>
+		<div className={styles.todo}>
 			<h1 className='todo__title'>To Do List</h1>
 			<AddTaskForm
 			// addTask={addTask}
