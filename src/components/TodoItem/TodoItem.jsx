@@ -1,6 +1,8 @@
 import { memo, useContext } from 'react'
 import { TasksContext } from '../../context/TasksContext'
+import useCombinedRefs from '../../hooks/useCombinedRefs'
 import RouterLink from '../RouterLink/RouterLink'
+import styles from './TodoItem.module.scss'
 
 // Внутри ребёнка я вытягиваю переданные от родителя пропсы и использую их в компоненте.
 // Компонент не должен изменять переданный пропс, он их только читает
@@ -23,26 +25,29 @@ const TodoItem = props => {
 		toggleTaskComplete,
 	} = useContext(TasksContext)
 
+	const animationRef = useRef(null)
+	const combinedRef = useCombinedRefs(
+		id === firstIncompleteTaskId ? firstIncompleteTaskRef : null,
+		animationRef,
+	)
+
 	return (
-		<li
-			className={`todo-item ${className}`}
-			ref={id === firstIncompleteTaskId ? firstIncompleteTaskRef : null}
-		>
+		<li className={`${styles.todoItem} ${className}`} ref={combinedRef}>
 			<input
-				className='todo-item__checkbox'
+				className={styles.checkbox}
 				id={id}
 				type='checkbox'
 				checked={isDone}
 				onChange={({ target }) => toggleTaskComplete(id, target.checked)}
 			/>
-			<label className='todo-item__label visually-hidden' htmlFor={id}>
+			<label className={`${styles.label} visually-hidden`} htmlFor={id}>
 				{title}
 			</label>
 			<RouterLink to={`/tasks/${id}`} aria-label='Task detail page'>
 				{title}
 			</RouterLink>
 			<button
-				className='todo-item__delete-button'
+				className={styles.deleteButton}
 				aria-label='Delete'
 				title='Delete'
 				onClick={() => deleteTask(id)}

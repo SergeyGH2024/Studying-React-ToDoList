@@ -9,7 +9,9 @@ import TodoItem from '../TodoItem/TodoItem'
 
 // Вместо дублирования тодо-элементов с разными пропсами, мы будем сами эти элементы(в виде объекта) принимать пропсом и обрабатывать методом массивов
 
-const TodoList = () => {
+const TodoList = props => {
+	const { styles } = props
+
 	// const { tasks = [], filteredTasks, onDeleteTaskButtonClick, onTaskCompleteChange, firstIncompleteTaskRef, firstIncompleteTaskId } = props
 
 	const { tasks, filteredTasks } = useContext(TasksContext)
@@ -18,15 +20,15 @@ const TodoList = () => {
 	const isEmptyFilteredTasks = filteredTasks?.length === 0
 
 	if (!hasTasks) {
-		return <div className='todo__empty-message'>There are no tasks yet</div>
+		return <div className={styles.emptyMessage}>There are no tasks yet</div>
 	}
 
 	if (hasTasks && isEmptyFilteredTasks) {
-		return <div className='todo__empty-message'>Tasks not found</div>
+		return <div className={styles.emptyMessage}>Tasks not found</div>
 	}
 
 	return (
-		<ul className='todo__list'>
+		<ul className={styles.list}>
 			{/* <TodoItem className='todo__item' id='task-1' title='Купить молоко' isDone={false}/>
 			<TodoItem className='todo__item' id='task-2' title='Погладить кота' isDone/> */}
 
@@ -43,7 +45,7 @@ const TodoList = () => {
 			))} */}
 
 			{(filteredTasks ?? tasks).map(task => (
-				<TodoItem className='todo__item' key={task.id} {...task} />
+				<TodoItem className={styles.item} key={task.id} {...task} />
 			))}
 		</ul>
 	)

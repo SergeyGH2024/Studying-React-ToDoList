@@ -63,21 +63,24 @@ const Todo = () => {
 		// 	tasks, filteredTasks, firstIncompleteTaskId, firstIncompleteTaskRef, deleteAllTasks, deleteTask, toggleTaskComplete
 		// }}>
 		<div className={styles.todo}>
-			<h1 className='todo__title'>To Do List</h1>
+			<h1 className={styles.title}>To Do List</h1>
 			<AddTaskForm
-			// addTask={addTask}
-			// newTaskTitle={newTaskTitle}
-			// setNewTaskTitle={setNewTaskTitle}
-			// newTaskInputRef={newTaskInputRef}
+				styles={styles}
+				// addTask={addTask}
+				// newTaskTitle={newTaskTitle}
+				// setNewTaskTitle={setNewTaskTitle}
+				// newTaskInputRef={newTaskInputRef}
 			/>
 			<SearchTaskForm
-			//  searchQuery={searchQuery}
-			//  setSearchQuery={setSearchQuery}
+				styles={styles}
+				//  searchQuery={searchQuery}
+				//  setSearchQuery={setSearchQuery}
 			/>
 			<TodoInfo
-			// total={tasks.length}
-			// done={doneTasks}
-			// onDeleteAllButtonClick={deleteAllTasks}
+				styles={styles}
+				// total={tasks.length}
+				// done={doneTasks}
+				// onDeleteAllButtonClick={deleteAllTasks}
 			/>
 			<Button
 				onClick={() =>
@@ -87,12 +90,13 @@ const Todo = () => {
 				Show first incomplete task
 			</Button>
 			<TodoList
-			//  tasks={tasks}
-			//  filteredTasks={filteredTasks}
-			//  firstIncompleteTaskRef={firstIncompleteTaskRef}
-			//  firstIncompleteTaskId={firstIncompleteTaskId}
-			//  onDeleteTaskButtonClick={deleteTask}
-			//  onTaskCompleteChange={toggleTaskComplete}
+				styles={styles}
+				//  tasks={tasks}
+				//  filteredTasks={filteredTasks}
+				//  firstIncompleteTaskRef={firstIncompleteTaskRef}
+				//  firstIncompleteTaskId={firstIncompleteTaskId}
+				//  onDeleteTaskButtonClick={deleteTask}
+				//  onTaskCompleteChange={toggleTaskComplete}
 			/>
 		</div>
 		// </TasksContext.Provider>
