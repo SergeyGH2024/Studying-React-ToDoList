@@ -17,4 +17,4 @@ const useCombinedRefs = (...refs) => {
 	}
 }
 
-export default useCombinedRefs()
+export default useCombinedRefs

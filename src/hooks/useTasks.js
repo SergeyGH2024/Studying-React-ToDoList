@@ -16,6 +16,7 @@ const useTasks = () => {
 
 	const [newTaskTitle, setNewTaskTitle] = useState('')
 	const [searchQuery, setSearchQuery] = useState('')
+	const [disappearingTaskId, setDisappearingTaskId] = useState(null)
 
 	const newTaskInputRef = useRef(null) // Данная переменная будет содержать ДОМ элемент, которому в атрибут ref мы передаём её.
 
@@ -43,7 +44,12 @@ const useTasks = () => {
 		// })
 		tasksAPI.delete(taskId)
 		.then(() => {
-			setTasks(tasks.filter(task => task.id !== taskId))
+			setDisappearingTaskId(taskId)
+
+			setTimeout(() => {
+				setTasks(tasks.filter(task => task.id !== taskId))
+				setDisappearingTaskId(null)
+			}, 400)
 		})
 
 	}, [tasks])
@@ -140,6 +146,7 @@ const useTasks = () => {
 		setSearchQuery,
 		newTaskInputRef,
 		addTask,
+		disappearingTaskId
 	}
 }
 
