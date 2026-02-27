@@ -4,10 +4,15 @@
 
 // <StrictMode> - специальная обёртка от реакт, которая помогает находить потенциальные проблемы в коде во время разработки
 
+// FSD featured-sliced-design - методология, по которой все приложение делиться как-бы на слои сверху вниз -
+// app(файлы для инициализации приложения) - pages(главные страницы) - widgets(большие основные блоки на стр.) - features(функции) -
+// entities(сущности, н-р задача todo) - shared(переиспользуемые компоненты, самые маленькие части, кнопки там)
+// Ключевое правило методологии - импорты идут сверху вниз строго, мы не можем в самом конце цепочки использовать импорт сущности сверху.
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import './styles'
+import App from './app'
+import './app/styles/index.js'
 
 createRoot(document.getElementById('root')).render(
 	// <StrictMode>

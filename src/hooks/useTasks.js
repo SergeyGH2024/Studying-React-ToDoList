@@ -17,6 +17,7 @@ const useTasks = () => {
 	const [newTaskTitle, setNewTaskTitle] = useState('')
 	const [searchQuery, setSearchQuery] = useState('')
 	const [disappearingTaskId, setDisappearingTaskId] = useState(null)
+	const [appearingTaskId, setAppearingTaskId] = useState(null)
 
 	const newTaskInputRef = useRef(null) // Данная переменная будет содержать ДОМ элемент, которому в атрибут ref мы передаём её.
 
@@ -101,6 +102,11 @@ const useTasks = () => {
 				// newTaskInputRef.current.value = ''
 				setSearchQuery('')
 				newTaskInputRef.current.focus()
+				setAppearingTaskId(addedTask.id)
+				setTimeout(() => {
+					setAppearingTaskId(null)
+
+				}, 400)
 			})
 
 		// }
@@ -146,7 +152,8 @@ const useTasks = () => {
 		setSearchQuery,
 		newTaskInputRef,
 		addTask,
-		disappearingTaskId
+		disappearingTaskId,
+		appearingTaskId,
 	}
 }
 

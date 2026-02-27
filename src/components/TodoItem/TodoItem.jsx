@@ -24,27 +24,36 @@ const TodoItem = props => {
 		deleteTask,
 		toggleTaskComplete,
 		disappearingTaskId,
+		appearingTaskId,
 	} = useContext(TasksContext)
 
-	const animationRef = useRef(null)
-	const combinedRef = useCombinedRefs(
-		id === firstIncompleteTaskId ? firstIncompleteTaskRef : null,
-		animationRef,
-	)
+	// const animationRef = useRef(null)
+	// const combinedRef = useCombinedRefs(
+	// 	id === firstIncompleteTaskId ? firstIncompleteTaskRef : null,
+	// 	animationRef,
+	// )
 
 
-	const handleClick = () => {
-		animationRef.current?.classList.add(styles.isDisappearing)
-		console.log(animationRef)
+	// Комбо рефы и handleClick больше не нужны, так как прокидываем стили через стейт переменную
 
 
-		setTimeout(() => {deleteTask(id)}, 400)
-	}
+	// const handleClick = () => {
+	// 	animationRef.current?.classList.add(styles.isDisappearing)
+	// 	console.log(animationRef)
+
+
+	// 	setTimeout(() => {deleteTask(id)}, 400)
+	// }
 
 	return (
 		<li
-		 className={`${styles.todoItem} ${className} ${disappearingTaskId === id ? styles.isDisappearing : ''}`}
-		 ref={combinedRef}>
+		 className={`
+			${styles.todoItem}
+			${className}
+			${disappearingTaskId === id ? styles.isDisappearing : ''}
+			${appearingTaskId === id ? styles.isAppearing : ''}
+			`}
+		 ref={id === firstIncompleteTaskId ? firstIncompleteTaskRef : null}>
 			<input
 				className={styles.checkbox}
 				id={id}
@@ -62,8 +71,8 @@ const TodoItem = props => {
 				className={styles.deleteButton}
 				aria-label='Delete'
 				title='Delete'
-				// onClick={() => deleteTask(id)}
-				onClick={handleClick}
+				onClick={() => deleteTask(id)}
+				// onClick={handleClick}
 			>
 				<svg
 					width='20'
