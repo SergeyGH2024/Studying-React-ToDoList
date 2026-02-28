@@ -9,13 +9,12 @@
 // entities(сущности, н-р задача todo) - shared(переиспользуемые компоненты, самые маленькие части, кнопки там)
 // Ключевое правило методологии - импорты идут сверху вниз строго, мы не можем в самом конце цепочки использовать импорт сущности сверху.
 
+import App from '@/app'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './app'
-import './app/styles/index.js'
 
 createRoot(document.getElementById('root')).render(
-	// <StrictMode>
+	<StrictMode>
 		<App />
-	// </StrictMode>,
+	</StrictMode>,
 )
