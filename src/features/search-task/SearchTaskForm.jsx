@@ -29,7 +29,7 @@ const SearchTaskForm = props => {
 				type='search'
 				value={searchQuery}
 				onInput={event => {
-					;(setSearchQuery(event.target.value), console.log(1))
+					setSearchQuery(event.target.value)
 				}}
 			/>
 		</form>

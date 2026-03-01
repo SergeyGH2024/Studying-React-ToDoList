@@ -19,8 +19,6 @@ const TodoList = props => {
 	const isEmptyFilteredTasks = filteredTasks?.length === 0
 
 	if (!hasTasks) {
-		console.log(styles)
-
 		return <div className={styles.emptyMessage}>There are no tasks yet</div>
 	}
 
