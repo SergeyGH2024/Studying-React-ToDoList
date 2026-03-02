@@ -1,5 +1,6 @@
 import { TasksContext } from '@/entities/todo'
 import RouterLink from '@/shared/ui/RouterLink'
+import { highlightCaseInsensitive } from '@/shared/utils/highlight'
 import { memo, useContext } from 'react'
 import styles from './TodoItem.module.scss'
 
@@ -24,7 +25,18 @@ const TodoItem = props => {
 		toggleTaskComplete,
 		disappearingTaskId,
 		appearingTaskId,
+		searchQuery,
 	} = useContext(TasksContext)
+
+	// const highlightedTitle =
+	// 	searchQuery.length > 0
+	// 		? title.replaceAll(
+	// 				new RegExp(searchQuery, 'gi'), // Поиск вхождений будет в обоих регистрах
+	// 				`<mark>$&</mark>`, // Вставляет исходный текст в нужном регистре (searchQuery)
+	// 			)
+	// 		: title
+
+	const highlightedTitle = highlightCaseInsensitive(title, searchQuery)
 
 	// const animationRef = useRef(null)
 	// const combinedRef = useCombinedRefs(
@@ -62,7 +74,8 @@ const TodoItem = props => {
 				{title}
 			</label>
 			<RouterLink to={`/tasks/${id}`} aria-label='Task detail page'>
-				{title}
+				{/* {title} */}
+				<span dangerouslySetInnerHTML={{ __html: highlightedTitle }} />
 			</RouterLink>
 			<button
 				className={styles.deleteButton}
