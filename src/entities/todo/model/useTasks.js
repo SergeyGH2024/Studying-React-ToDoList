@@ -58,7 +58,7 @@ const useTasks = () => {
 
 	const [tasks, dispatch] = useReducer(tasksReducer, []) // Первый аргумент - ссылка на функцию редьюсер, с которой будет работать хук, второй аргумент - начальное знач. Общепринятое название при работе с хуком редьюсером dispatch - изменение стейт переменной.
 
-	const [newTaskTitle, setNewTaskTitle] = useState('')
+	// const [newTaskTitle, setNewTaskTitle] = useState('')
 	const [searchQuery, setSearchQuery] = useState('')
 	const [disappearingTaskId, setDisappearingTaskId] = useState(null)
 	const [appearingTaskId, setAppearingTaskId] = useState(null)
@@ -124,7 +124,7 @@ const useTasks = () => {
 		})
 	}, [])
 
-	const addTask = useCallback(title => {
+	const addTask = useCallback((title, callbackAfterAdding) => {
 		// if (newTaskTitle.trim().length > 0) {
 		const newTask = {
 			// id: crypto?.randomUUID() ?? Date.now().toString(),
@@ -145,7 +145,8 @@ const useTasks = () => {
 			// setTasks(prevTasks => [...prevTasks, addedTask])
 			dispatch({ type: 'ADD', task: addedTask })
 			// setTasks([...tasks, newTask])
-			setNewTaskTitle('')
+			// setNewTaskTitle('')
+			callbackAfterAdding()
 			// newTaskInputRef.current.value = ''
 			setSearchQuery('')
 			newTaskInputRef.current.focus()
@@ -195,8 +196,8 @@ const useTasks = () => {
 		deleteAllTasks,
 		deleteTask,
 		toggleTaskComplete,
-		newTaskTitle,
-		setNewTaskTitle,
+		// newTaskTitle,
+		// setNewTaskTitle,
 		searchQuery,
 		setSearchQuery,
 		newTaskInputRef,
